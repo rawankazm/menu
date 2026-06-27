@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ساردەمەنی و چایەخانەی کۆشکی شەقڵاوە</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles to hide scrollbar but allow scrolling */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans pb-20 selection:bg-blue-500 selection:text-white">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-gray-900/90 backdrop-blur-md border-b border-gray-800 shadow-lg">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 id="menu-title" class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
+                ساردەمەنی و چایەخانەی کۆشکی شەقڵاوە
+            </h1>
+            
+            <div class="flex items-center gap-3">
+                <!-- QR Code Button -->
+                <button onclick="toggleQR(true)" id="qr-btn" class="p-2 rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300 transition" title="سکانی مینیو">
+                    <svg xmlns="images/qr.png" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+                </button>
+
+                <!-- Language Toggle -->
+                <button onclick="toggleLanguage()" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-800 hover:bg-gray-700 border border-gray-700 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+                    <span id="lang-text" class="text-sm font-medium">العربية</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Category Navigation -->
+        <div class="max-w-4xl mx-auto px-4 pb-4 overflow-x-auto hide-scrollbar">
+            <div id="categories-container" class="flex gap-3 whitespace-nowrap min-w-max">
+                <!-- Categories will be injected here by JS -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Menu Grid -->
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <div id="menu-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            <!-- Menu items will be injected here by JS -->
+        </div>
+    </main>
+
+    <!-- QR Code Modal -->
+    <div id="qr-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="bg-gray-900 border border-gray-700 p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl relative">
+            <button onclick="toggleQR(false)" class="absolute top-4 right-4 p-2 bg-gray-800 rounded-full text-gray-400 hover:text-white hover:bg-gray-700 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+            
+            <div class="mb-6 flex justify-center text-blue-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+            </div>
+            
+            <h2 id="modal-title" class="text-2xl font-bold text-white mb-2">سکانی مینیو</h2>
+            <p id="modal-desc" class="text-gray-400 text-sm mb-8 leading-relaxed">
+                ئەم کۆدە سکان بکە بۆ بینینی مینیوەکە لە مۆبایلەکەتدا
+            </p>
+            
+            <div class="bg-white p-4 rounded-2xl inline-block shadow-lg">
+                <img id="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://your-cafe-menu.com&bgcolor=111827&color=ffffff&margin=10" alt="QR Code" class="w-48 h-48 rounded-lg" />
+            </div>
+            
+            <button onclick="toggleQR(false)" id="modal-close-btn" class="mt-8 w-full py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl font-medium transition">
+                داخستن
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // State variables
+        let currentLanguage = 'ku';
+        let activeCategory = 'all';
+
+        // Translations
+        const t = {
+            ku: {
+                menuTitle: 'ساردەمەنی و چایەخانەی کۆشکی شەقڵاوە',
+                all: 'هەمووی',
+                hot: 'گەرمەکان',
+                cold: 'ساردەکان',
+                hookah: 'نێرگەلە',
+                currency: 'دینار',
+                scanQr: 'سکانی مینیو',
+                close: 'داخستن',
+                qrDesc: 'ئەم کۆدە سکان بکە بۆ بینینی مینیوەکە لە مۆبایلەکەتدا',
+                empty: 'هیچ بەرهەمێک نەدۆزرایەوە'
+            },
+            ar: {
+                menuTitle: 'مرطبات ومقهى قصر شقلاوة',
+                all: 'الكل',
+                hot: 'مشروبات ساخنة',
+                cold: 'مشروبات باردة',
+                hookah: 'أرجيلة (شيشة)',
+                currency: 'دينار',
+                scanQr: 'مسح القائمة',
+                close: 'إغلاق',
+                qrDesc: 'قم بمسح هذا الرمز لعرض القائمة على هاتفك',
+                empty: 'لا توجد منتجات'
+            }
+        };
+
+        // Icons in SVG format
+        const icons = {
+            all: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>`,
+            hot: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/></svg>`,
+            cold: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 2 1.88 1.88"/><path d="M14 2 12.12 3.88"/><path d="M6 10l.74 8.86A2 2 0 0 0 8.73 21H15.27a2 2 0 0 0 1.99-1.84L18 10"/><path d="M4 6h16a2 2 0 0 1 2 2v2H2V8a2 2 0 0 1 2-2Z"/></svg>`,
+            hookah: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg>`
+        };
+
+        // Categories structure
+        const categoryList = ['all', 'hot', 'cold', 'hookah'];
+
+        // Product Data
+        const menuData = [
+            { id: 1, category: 'hot', price: 2000, image: 'images/item_1.jpg', ku: { name: 'قاوەی شوکولاتە' }, ar: { name: 'قهوة بالشكولاتة' } },
+            { id: 2, category: 'hot', price: 2000, image: 'images/item_2.jpg', ku: { name: 'قاوەی قەزوان' }, ar: { name: 'قهوة قزوان' } },
+            { id: 3, category: 'hot', price: 2000, image: 'images/item_3.jpg', ku: { name: 'قاوەی سادە' }, ar: { name: 'قهوة سادة' } },
+            { id: 4, category: 'hot', price: 1000, image: 'images/item_4.jpg', ku: { name: 'نیسکافە' }, ar: { name: 'نسكافيه' } },
+            { id: 5, category: 'hot', price: 1000, image: 'images/item_5.jpg', ku: { name: 'کاپوچینۆ' }, ar: { name: 'كابوتشينو' } },
+            { id: 6, category: 'hot', price: 1000, image: 'images/item_6.jpg', ku: { name: 'شیر' }, ar: { name: 'حليب ساخن' } },
+            { id: 14, category: 'hot', price: 500, image: 'images/item_14.jpg', ku: { name: 'چا' }, ar: { name: 'شاي' } },
+            
+            { id: 7, category: 'cold', price: 2000, image: 'images/item_7.jpg', ku: { name: 'ئایس کرێم' }, ar: { name: 'آيس كريم' } },
+            { id: 8, category: 'cold', price: 3000, image: 'images/item_8.jpg', ku: { name: 'شەربەتی پرتەقاڵ' }, ar: { name: 'عصير برتقال' } },
+            { id: 9, category: 'cold', price: 3000, image: 'images/item_9.jpg', ku: { name: 'شەربەتی مۆز' }, ar: { name: 'عصير موز' } },
+            { id: 10, category: 'cold', price: 3000, image: 'images/item_10.jpg', ku: { name: 'شەربەتی گندۆرە' }, ar: { name: 'عصير بطيخ' } },
+            { id: 11, category: 'cold', price: 3000, image: 'images/item_11.jpg', ku: { name: 'شەربەتی فراولە' }, ar: { name: 'عصير فراولة' } },
+            { id: 12, category: 'cold', price: 3000, image: 'images/item_12.jpg', ku: { name: 'شەربەتی توو' }, ar: { name: 'عصير توت' } },
+            { id: 13, category: 'cold', price: 5000, image: 'images/item_13.jpg', ku: { name: 'مێڵک شەیک' }, ar: { name: 'ميلك شيك' } },
+            { id: 22, category: 'cold', price: 5000, image: 'images/strawberry_milkshake_pink.png', ku: { name: 'مێڵک شەیک فراولە' }, ar: { name: 'ميلك شيك فراولة' } },
+            { id: 23, category: 'cold', price: 5000, image: 'images/nutella_shake.png', ku: { name: 'مێڵک شەیک نۆتێلا' }, ar: { name: 'ميلك شيك نوتيلا' } },
+            { id: 24, category: 'cold', price: 5000, image: 'images/nutella_pistachio_shake.png', ku: { name: 'مێڵک شەیک فستق' }, ar: { name: 'ميلك شيك فستق' } },
+            { id: 25, category: 'cold', price: 5000, image: 'images/nutella_oreo_shake.png', ku: { name: 'مێڵک شەیک ئۆریۆ' }, ar: { name: 'ميلك شيك أوريو' } },
+            { id: 26, category: 'cold', price: 5000, image: 'images/nutella_lotus_shake.png', ku: { name: 'مێڵک شەیک لۆتس' }, ar: { name: 'ميلك شيك لوتس' } },
+            { id: 27, category: 'cold', price: 4000, image: 'images/banana_nutella_juice.png', ku: { name: 'شەربەتی مۆز نۆتێلا' }, ar: { name: 'عصير موز بالنوتيلا' } },
+            { id: 28, category: 'cold', price: 4000, image: 'images/banana_pistachio_juice.png', ku: { name: 'شەربەتی مۆز فستق' }, ar: { name: 'عصير موز بالفستق' } },
+            { id: 29, category: 'cold', price: 4000, image: 'images/banana_strawberry_juice.png', ku: { name: 'شەربەتی مۆز فراولە' }, ar: { name: 'عصير موز بالفراولة' } },
+            { id: 30, category: 'cold', price: 4000, image: 'images/banana_lotus_juice.png', ku: { name: 'شەربەتی مۆز لۆتس' }, ar: { name: 'عصير موز باللوتس' } },
+            { id: 31, category: 'cold', price: 4000, image: 'images/cocktail_juice.png', ku: { name: 'شەربەتی کۆکتێل' }, ar: { name: 'عصير كوكتيل' } },
+            { id: 15, category: 'cold', price: 500, image: 'images/item_15.jpg', ku: { name: 'ئاو' }, ar: { name: 'ماء' } },
+            { id: 16, category: 'cold', price: 1000, image: 'images/item_16.jpg', ku: { name: 'ماستاو' }, ar: { name: 'عيران' } },
+
+            { id: 17, category: 'hookah', price: 10000, image: 'images/apple.png', ku: { name: 'نێرگەلەی سێو' }, ar: { name: 'أرجيلة تفاحتين' } },
+            { id: 18, category: 'hookah', price: 10000, image: 'images/lemo na3na3.png', ku: { name: 'نێرگەلەی لیمۆ نەعنەع' }, ar: { name: 'أرجيلة ليمون ونعناع' } },
+            { id: 19, category: 'hookah', price: 10000, image: 'images/bnesht na3na3.png', ku: { name: 'نێرگەلەی بنێشت نەعنەع' }, ar: { name: 'أرجيلة علكة ونعناع' } },
+            { id: 20, category: 'hookah', price: 10000, image: 'images/bnesht gndora.png', ku: { name: 'نێرگەلەی بنێشت گندۆرە' }, ar: { name: 'أرجيلة علكة وبطيخ' } },
+            { id: 21, category: 'hookah', price: 10000, image: 'images/englize.png', ku: { name: 'نێرگەلەی ئینگلیزی' }, ar: { name: 'أرجيلة إنجليزي' } }
+        ];
+
+        // Functions to Update UI
+        function updateStaticTexts() {
+            document.documentElement.lang = currentLanguage;
+            document.getElementById('menu-title').innerText = t[currentLanguage].menuTitle;
+            document.getElementById('qr-btn').title = t[currentLanguage].scanQr;
+            document.getElementById('lang-text').innerText = currentLanguage === 'ku' ? 'العربية' : 'کوردی';
+            document.getElementById('modal-title').innerText = t[currentLanguage].scanQr;
+            document.getElementById('modal-desc').innerText = t[currentLanguage].qrDesc;
+            document.getElementById('modal-close-btn').innerText = t[currentLanguage].close;
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('categories-container');
+            container.innerHTML = categoryList.map(cat => `
+                <button
+                    onclick="setCategory('${cat}')"
+                    class="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
+                        activeCategory === cat 
+                        ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/30 scale-105' 
+                        : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                    }"
+                >
+                    ${icons[cat]}
+                    ${t[currentLanguage][cat]}
+                </button>
+            `).join('');
+        }
+
+        function renderMenu() {
+            const container = document.getElementById('menu-grid');
+            const filteredMenu = activeCategory === 'all' 
+                ? menuData 
+                : menuData.filter(item => item.category === activeCategory);
+
+            if (filteredMenu.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-20 text-gray-500">
+                        ${icons.cold} <!-- Using cold icon as a placeholder -->
+                        <p class="mt-4">${t[currentLanguage].empty}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredMenu.map(item => `
+                <div class="group bg-gray-800 rounded-3xl overflow-hidden shadow-md border border-gray-700/50 hover:border-blue-500/50 hover:shadow-blue-900/20 transition-all duration-300 flex flex-col">
+                    <div class="relative aspect-square overflow-hidden bg-gray-700">
+                        <img 
+                            src="${item.image}" 
+                            alt="${item[currentLanguage].name}" 
+                            loading="lazy"
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/20 to-transparent opacity-80"></div>
+                        <div class="absolute bottom-3 left-3 bg-blue-500/90 backdrop-blur-sm text-white px-3 py-1 rounded-2xl text-sm font-bold shadow-lg">
+                            ${item.price.toLocaleString('en-US')} <span class="text-xs font-normal opacity-90">${t[currentLanguage].currency}</span>
+                        </div>
+                    </div>
+                    <div class="p-4 flex-grow flex items-center justify-center text-center">
+                        <h3 class="text-lg font-medium text-gray-100 line-clamp-2 leading-tight">
+                            ${item[currentLanguage].name}
+                        </h3>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Actions
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'ku' ? 'ar' : 'ku';
+            updateStaticTexts();
+            renderCategories();
+            renderMenu();
+        }
+
+        function setCategory(cat) {
+            activeCategory = cat;
+            renderCategories();
+            renderMenu();
+        }
+
+        function toggleQR(show) {
+            const modal = document.getElementById('qr-modal');
+            if (show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        // Initialize App
+        updateStaticTexts();
+        renderCategories();
+        renderMenu();
+        
+        // Dynamically set QR code to current page URL
+        document.getElementById('qr-image').src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(window.location.href) + '&bgcolor=111827&color=ffffff&margin=10';
+    </script>
+</body>
+</html>
